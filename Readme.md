@@ -36,3 +36,8 @@ Excemplate solution targets Visual Studio 2012.  The solution depends on
 
 Once these two are installed, build the Excemplate solution.
 
+Documentation
+-------------
+
+None at the moment.
+
