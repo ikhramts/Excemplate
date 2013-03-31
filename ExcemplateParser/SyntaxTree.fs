@@ -12,13 +12,9 @@ and Literal =
     | Double of double
     | String of string
 
-and Variable = string
-and Function = string * Argument list
 and Argument = 
     | NamedArgument of string * Expression
-    | OrderedArgument of Expression
 
 type Statement = 
     { AssignTo : string option;
       Expression : Expression; }
-

@@ -41,7 +41,7 @@
     <None Include="Parser.fsy" />
     <Compile Include="Parser.fs" />
     <Compile Include="Lexer.fs" />
-    <Content Include="Possible Expressions.txt" />
+    <Compile Include="Evaluator.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.PowerPack, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b" />
