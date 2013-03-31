@@ -10,7 +10,7 @@
     <RootNamespace>ExcemplateParser</RootNamespace>
     <AssemblyName>ExcemplateParser</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Name>ExcemplateParser</Name>
+    <Name>ExcemplateEvaluator</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,9 +36,11 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
   <ItemGroup>
-    <Compile Include="Syntax.fs" />
-    <None Include="Parser.fsy" />
+    <Compile Include="SyntaxTree.fs" />
     <None Include="Lexer.fsl" />
+    <None Include="Parser.fsy" />
+    <Compile Include="Parser.fs" />
+    <Compile Include="Lexer.fs" />
     <Content Include="Possible Expressions.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -53,7 +55,7 @@
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>fslex --unicode "$(ProjectDir)Lexer.fsl"
-fsyacc "$(ProjectDir)Parser.fsy"</PreBuildEvent>
+fsyacc --internal --module ExcemplateEvaluator.Parser "$(ProjectDir)Parser.fsy"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

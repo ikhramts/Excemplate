@@ -1,23 +1,22 @@
-﻿module SyntaxTree
+﻿module internal ExcemplateEvaluator.SyntaxTree
 open System
 
 // Definition of the abstract syntax tree elements.
 type Expression = 
-    | Literal
-    | Variable
-    | Function
+    | Value of Literal
+    | Var of string
+    | Function of string * Argument list
     
 and Literal = 
     | Int of int
     | Double of double
     | String of string
-    | DateTime
 
 and Variable = string
 and Function = string * Argument list
-and Argument = NamedArgument | OrderedArgument
-and OrderedArgument = Expression
-and NamedArgument = string * Expression
+and Argument = 
+    | NamedArgument of string * Expression
+    | OrderedArgument of Expression
 
 type Statement = 
     { AssignTo : string option;
