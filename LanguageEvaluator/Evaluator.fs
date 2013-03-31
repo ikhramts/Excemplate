@@ -1,9 +1,9 @@
-﻿namespace ExcemplateEvaluator
+﻿namespace Excemplate.Language
 
 open System
 open System.Collections.Generic
 
-open ExcemplateEvaluator.SyntaxTree
+open Excemplate.Language.SyntaxTree
 
 
 type public Evaluator(evalFunc) = 

@@ -1,5 +1,5 @@
 ﻿%{
-open ExcemplateEvaluator.SyntaxTree
+open Excemplate.Language.SyntaxTree
 %}
 
 %token <string> ID

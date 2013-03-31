@@ -1,4 +1,4 @@
-﻿module internal ExcemplateEvaluator.SyntaxTree
+﻿module internal Excemplate.Language.SyntaxTree
 open System
 
 // Definition of the abstract syntax tree elements.

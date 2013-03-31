@@ -1,12 +1,12 @@
 ﻿{
-module internal ExcemplateEvaluator.Lexer
+module internal Excemplate.Language.Lexer
 
 open Microsoft.FSharp.Text.Lexing
 open System
 open System.Text.RegularExpressions
 
-open ExcemplateEvaluator.SyntaxTree
-open ExcemplateEvaluator.Parser
+open Excemplate.Language.SyntaxTree
+open Excemplate.Language.Parser
 
 let lexeme (lexbuf : LexBuffer<char>) = 
     LexBuffer<char>.LexemeString(lexbuf)

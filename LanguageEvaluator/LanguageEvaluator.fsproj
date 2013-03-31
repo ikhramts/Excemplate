@@ -10,7 +10,7 @@
     <RootNamespace>ExcemplateParser</RootNamespace>
     <AssemblyName>ExcemplateParser</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Name>ExcemplateEvaluator</Name>
+    <Name>LanguageEvaluator</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,7 +55,7 @@
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>fslex --unicode "$(ProjectDir)Lexer.fsl"
-fsyacc --internal --module ExcemplateEvaluator.Parser "$(ProjectDir)Parser.fsy"</PreBuildEvent>
+fsyacc --internal --module Excemplate.Language.Parser "$(ProjectDir)Parser.fsy"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
