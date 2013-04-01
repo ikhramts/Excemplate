@@ -6,7 +6,7 @@ Overview
 
 Excemplate is a simple language (and a processing system to go along with it) that allows one to create Excel document templates directly in Excel spreadsheets.
 
-Using Excemplate we could write in one of the cells of an Excel file
+Using Excemplate, we could write in one of the cells of an Excel file
 
     |getEmployeeName(32)
 	
