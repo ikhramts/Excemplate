@@ -8,9 +8,15 @@ namespace Excemplate.Tests.LanguageEvaluator
 {
     public class FunctionEvaluator
     {
-        public static object EvaluateFunction(string name, Dictionary<string, object> args)
+        /// <summary>
+        /// A dummy function call handler for the tests.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static object EvaluateFunction(string functionName, Dictionary<string, object> args)
         {
-            switch (name)
+            switch (functionName)
             {
                 case "Add":
                     return Convert.ToDouble(args["first"]) + Convert.ToDouble(args["second"]);
@@ -21,7 +27,7 @@ namespace Excemplate.Tests.LanguageEvaluator
                     return Convert.ToDouble(args["val"]) * 3;
 
                 default:
-                    throw new Exception("Unknown function \"" + name + "\"");
+                    throw new Exception("Unknown function \"" + functionName + "\"");
             }
         }
     }

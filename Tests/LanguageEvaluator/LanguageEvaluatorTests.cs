@@ -30,6 +30,7 @@ namespace Excemplate.Tests.LanguageEvaluator
             evaluator = null;
         }
 
+        //*******************************************
         [Test]
         // Literals
         [TestCase("0", 0)]
@@ -67,6 +68,7 @@ namespace Excemplate.Tests.LanguageEvaluator
             Assert.AreEqual(expected, result);
         }
 
+        //*******************************************
         [Test]
         // Literals
         [TestCase("var=0", 0)]
