@@ -5,10 +5,15 @@ open System.Collections.Generic
 
 open Excemplate.Language.SyntaxTree
 
+/// <summary>A delegate that handles function calls in the Excemplate expressions.
+/// </summary>
+type public FunctionCallHandlerDelegate = delegate of string * Dictionary<string, Object> -> Object
 
-type public Evaluator(evalFunc) = 
+type public Evaluator(evalFunc:FunctionCallHandlerDelegate) = 
+    (****************** Private Fields ********************)
     let variables = new Dictionary<string, Object>()
 
+    (****************** Private Functions ********************)
     // A set of functions that handles evaluation of different components of
     // the abstract syntax tree.  This implementation is not tail recursive;
     // at some point it will be good to try to rewrite this to be tail recursive
@@ -17,7 +22,7 @@ type public Evaluator(evalFunc) =
         match expr with
         | Value(value) -> evaluateValue value
         | Var(v) -> variables.[v]
-        | Function(name, args) -> evalFunc (name, (evaluateArgs args))
+        | Function(name, args) -> evalFunc.Invoke(name, (evaluateArgs args))
         
     and evaluateValue value = 
         match value with
@@ -32,6 +37,11 @@ type public Evaluator(evalFunc) =
             | NamedArgument(name, value) -> dictionary.Add(name, evaluateExpression value)
 
         dictionary
+    
+    (****************** Public Methods ********************)
+    member public this.DeleteVariable name =
+        variables.Remove(name) |> ignore
+        ()
 
     /// <summary>Evaluates an Excemplate statement and either returns the result or 
     /// saves the result to an internal variable dictionary, depending on the type of
@@ -50,3 +60,8 @@ type public Evaluator(evalFunc) =
         | Some(varName) -> variables.[varName] <- result
                            null
         | None -> result
+
+    member public this.SetVariable(name, value:Object) = 
+        variables.[name] <- value
+        ()
+
