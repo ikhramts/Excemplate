@@ -9,12 +9,24 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Excemplate.Core.ExcelUtils
 {
-    class ExcelManager
+    public class ExcelManager
     {
         //****************** Public Properties ********************//
         public Excel.Application ExcelInstance { get; private set; }
 
         //****************** Public Methods ********************//
+        public int GetProcessId()
+        {
+            if (ExcelInstance == null)
+            {
+                throw new ExcelManagerException("Excel process has not been started.");
+            }
+
+            uint processId;
+            GetWindowThreadProcessId((IntPtr)ExcelInstance.Hwnd, out processId);
+            return (int)processId;
+        }
+
         public Excel.Workbook OpenWorkbook(string fileName)
         {
             return ExcelInstance.Workbooks.Open(fileName);
@@ -54,29 +66,29 @@ namespace Excemplate.Core.ExcelUtils
         /// </summary>
         public void Stop()
         {
+            if (ExcelInstance == null)
+            {
+                return;
+            }
+
             // Force close all worksheets.
             foreach (Excel.Workbook workbook in ExcelInstance.Workbooks)
             {
                 workbook.Close(SaveChanges: false); 
             }
 
-            KillProcessById(ExcelInstance.Hwnd);
+            var processId = GetProcessId();
+
+            if (processId != 0)
+            {
+                Process.GetProcessById((int)processId).Kill();
+            }
+
+            ExcelInstance = null;
         }
 
         //****************** Private Functions ********************//
         [DllImport("user32.dll")]
         private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-
-        private static void KillProcessById(int hwnd)
-        {
-            uint processId;
-            GetWindowThreadProcessId((IntPtr)hwnd, out processId);
-            if (processId == 0)
-            {
-                throw new ArgumentException("Cannot find process for hwnd " + hwnd.ToString());
-            }
-
-            Process.GetProcessById((int)processId).Kill();
-        }
     }
 }

@@ -30,7 +30,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="Office, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,16 +46,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\ExcelUtils\ExcelManagerTests.cs" />
     <Compile Include="LanguageEvaluator\FunctionEvaluator.cs" />
     <Compile Include="LanguageEvaluator\LanguageEvaluatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestingUtils\ProcessUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Excemplate.Core\Excemplate.Core.csproj">
+      <Project>{36b0907d-0c09-475f-af9c-72645d692a36}</Project>
+      <Name>Excemplate.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LanguageEvaluator\LanguageEvaluator.fsproj">
       <Project>{329c3229-f5e9-483a-9d04-c590f8676b89}</Project>
       <Name>LanguageEvaluator</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
