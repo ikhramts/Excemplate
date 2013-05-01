@@ -8,6 +8,7 @@ namespace Tests.Core
 {
     class TemplateProcessorTests
     {
-        private static const string TEST_WORKBOOK = @"Core\Test Workbook.xlsx";
+        private static const string TEST_TEMPLATE = @"Core\Test Template.xlsx";
+        private static const string EMPTY_TEMPLATE = @"Core\Empty Template.xlsx";
     }
 }
