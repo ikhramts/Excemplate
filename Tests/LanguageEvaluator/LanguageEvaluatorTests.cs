@@ -45,23 +45,26 @@ namespace Excemplate.Tests.LanguageEvaluator
 
         // Functions
         [TestCase("GetFour()", 4)]
+        [TestCase("\tGetFour\t(\t)\t", 4)]
         [TestCase("MultiplyByThree(val=6)", 18)]
         [TestCase("Add(first=2, second=2.5)", 4.5)]
 
         // Composite functions
         [TestCase("MultiplyByThree(val=Add(first=GetFour(), second=2.5))", 19.5)]
+        [TestCase("MultiplyByThree \t(val =Add(first=GetFour() ,second= 2.5) ) ", 19.5)]
 
         // Assignments should return null.
         [TestCase("var=0", null)]
         [TestCase("var=\"hello\"", null)]
-        [TestCase("var=12.3", null)]
-        [TestCase("var=testString1", null)]
-        [TestCase("var=testInt_1", null)]
+        [TestCase("var =12.3", null)]
+        [TestCase("var= testString1", null)]
+        [TestCase("var=\ttestInt_1", null)]
         [TestCase("var=testDouble", null)]
-        [TestCase("var=GetFour()", null)]
-        [TestCase("var=MultiplyByThree(val=6)", null)]
-        [TestCase("var=Add(first=2, second=2.5)", null)]
-        [TestCase("var=MultiplyByThree(val=Add(first=GetFour(), second=2.5))", null)]
+        [TestCase("var\t = GetFour()", null)]
+        [TestCase(" var = GetFour ( ) ", null)]
+        [TestCase("var=MultiplyByThree( val=6)", null)]
+        [TestCase("var=Add(first=2, second=2.5 ) ", null)]
+        [TestCase("var=MultiplyByThree(val= Add(first =GetFour () , second\t= 2.5))", null)]
         public void EvaluateExpression(string statement, object expected)
         {
             var result = evaluator.Evaluate(statement);
@@ -72,6 +75,8 @@ namespace Excemplate.Tests.LanguageEvaluator
         [Test]
         // Literals
         [TestCase("var=0", 0)]
+        [TestCase(" var =0", 0)]
+        [TestCase(" \tvar\t =\t0", 0)]
         [TestCase("var=\"\"", "")]
         [TestCase("var=\"hello\"", "hello")]
         [TestCase("var=12.3", 12.3)]
@@ -84,6 +89,7 @@ namespace Excemplate.Tests.LanguageEvaluator
         // Functions
         [TestCase("var=GetFour()", 4)]
         [TestCase("var=MultiplyByThree(val=6)", 18)]
+        [TestCase("var=\tMultiplyByThree(val=6)", 18)]
         [TestCase("var=Add(first=2, second=2.5)", 4.5)]
 
         // Composite functions
