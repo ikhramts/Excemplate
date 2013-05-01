@@ -13,6 +13,8 @@ namespace Excemplate.Tests.LanguageEvaluator
     [TestFixture]
     public class LanguageEvaluatorTests
     {
+        //TODO: Add tests for exceptions.
+
         private Evaluator evaluator;
 
         [SetUp]

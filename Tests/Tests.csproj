@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ExcelUtils\ExcelManagerTests.cs" />
+    <Compile Include="Core\TemplateProcessorTests.cs" />
     <Compile Include="LanguageEvaluator\FunctionEvaluator.cs" />
     <Compile Include="LanguageEvaluator\LanguageEvaluatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,7 +63,11 @@
       <Name>LanguageEvaluator</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Core\Test Workbook.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

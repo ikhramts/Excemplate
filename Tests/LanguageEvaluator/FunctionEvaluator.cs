@@ -8,6 +8,20 @@ namespace Excemplate.Tests.LanguageEvaluator
 {
     public class FunctionEvaluator
     {
+        public static List<object> ObjectList = new List<object>() {
+            "test", 2, 3.4,
+        };
+
+        public static List<string> StringList = new List<string> {
+            "one", "two", "three", "turtle",
+        };
+
+        // First dimension represents rows, second dimension represents columns.
+        public static int[,] IntArray2D = new int[2, 3] {
+            {2, 5, 0},
+            {5, 6, 12},
+        };
+
         /// <summary>
         /// A dummy function call handler for the tests.
         /// </summary>
@@ -25,6 +39,21 @@ namespace Excemplate.Tests.LanguageEvaluator
 
                 case "MultiplyByThree":
                     return Convert.ToDouble(args["val"]) * 3;
+
+                case "GetObjectList":
+                    return ObjectList;
+
+                case "GetStringList":
+                    return StringList;
+
+                case "GetObjectArray":
+                    return ObjectList.ToArray();
+
+                case "GetStringArray":
+                    return StringList.ToArray();
+
+                case "GetIntArray2D":
+                    return IntArray2D;
 
                 default:
                     throw new Exception("Unknown function \"" + functionName + "\"");

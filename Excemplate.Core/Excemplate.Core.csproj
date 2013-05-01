@@ -48,6 +48,13 @@
     <Compile Include="ExcelUtils\ExcelManager.cs" />
     <Compile Include="ExcelUtils\ExcelManagerException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateProcessor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LanguageEvaluator\LanguageEvaluator.fsproj">
+      <Project>{329c3229-f5e9-483a-9d04-c590f8676b89}</Project>
+      <Name>LanguageEvaluator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
