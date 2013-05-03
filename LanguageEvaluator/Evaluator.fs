@@ -12,32 +12,10 @@ type public FunctionCallHandlerDelegate = delegate of string * Dictionary<string
 type public Evaluator(evalFunc:FunctionCallHandlerDelegate) = 
     (****************** Private Fields ********************)
     let variables = new Dictionary<string, Object>()
-
-    (****************** Private Functions ********************)
-    // A set of functions that handles evaluation of different components of
-    // the abstract syntax tree.  This implementation is not tail recursive;
-    // at some point it will be good to try to rewrite this to be tail recursive
-    // using continuations (if it is possible).
-    let rec evaluateExpression expr =
-        match expr with
-        | Value(value) -> evaluateValue value
-        | Var(v) -> variables.[v]
-        | Function(name, args) -> evalFunc.Invoke(name, (evaluateArgs args))
-        
-    and evaluateValue value = 
-        match value with
-        | Int(i) -> i :> Object
-        | Double(d) -> d :> Object
-        | String(s) -> s :> Object
-
-    and evaluateArgs args =
-        let dictionary = new Dictionary<string, Object>()
-        for arg in args do
-            match arg with
-            | NamedArgument(name, value) -> dictionary.Add(name, evaluateExpression value)
-
-        dictionary
     
+    (****************** Public Properties ********************)
+    member val public EvalFunc:FunctionCallHandlerDelegate = evalFunc with get, set
+        
     (****************** Public Methods ********************)
     member public this.DeleteVariable name =
         variables.Remove(name) |> ignore
@@ -50,6 +28,30 @@ type public Evaluator(evalFunc:FunctionCallHandlerDelegate) =
     /// <returns>Null if the result was saved in a variable; otherwise, the result of
     /// evaluating the statement.</returns>
     member public this.Evaluate statement =
+        // A set of functions that handle evaluation of different components of
+        // the abstract syntax tree.  This implementation is not tail recursive;
+        // at some point it will be good to try to rewrite this to be tail recursive
+        // using continuations (if it is possible).
+        let rec evaluateExpression expr =
+            match expr with
+            | Value(value) -> evaluateValue value
+            | Var(v) -> variables.[v]
+            | Function(name, args) -> this.EvalFunc.Invoke(name, (evaluateArgs args))
+        
+        and evaluateValue value = 
+            match value with
+            | Int(i) -> i :> Object
+            | Double(d) -> d :> Object
+            | String(s) -> s :> Object
+
+        and evaluateArgs args =
+            let dictionary = new Dictionary<string, Object>()
+            for arg in args do
+                match arg with
+                | NamedArgument(name, value) -> dictionary.Add(name, evaluateExpression value)
+
+            dictionary
+
         // Parse the line and evaluate the result.
         let lexingBuffer = Lexing.LexBuffer<char>.FromString(statement)
         let syntaxTree = Parser.statement Lexer.tokenize lexingBuffer
@@ -64,4 +66,6 @@ type public Evaluator(evalFunc:FunctionCallHandlerDelegate) =
     member public this.SetVariable(name, value:Object) = 
         variables.[name] <- value
         ()
+
+    
 

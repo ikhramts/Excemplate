@@ -73,6 +73,14 @@ namespace Excemplate.Tests.LanguageEvaluator
             Assert.AreEqual(expected, result);
         }
 
+        [Test]
+        public void ObjectListTest()
+        {
+            var result = evaluator.Evaluate("GetObjectList()");
+            Assert.AreEqual(FunctionEvaluator.ObjectList, result);
+            Assert.AreNotEqual(FunctionEvaluator.ObjectList.ToArray().GetType(), result.GetType());
+        }
+
         //*******************************************
         [Test]
         // Literals

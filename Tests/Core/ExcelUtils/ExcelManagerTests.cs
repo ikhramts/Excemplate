@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -35,7 +36,7 @@ namespace Excemplate.Tests.Core.ExcelUtils
         }
 
         [Test]
-        public void KillAfterModifyingWorkbook()
+        public void TryKillingAfterModifyingWorkbook()
         {
             var manager = ExcelManager.StartInstance();
             var excel = manager.ExcelInstance;
@@ -62,6 +63,21 @@ namespace Excemplate.Tests.Core.ExcelUtils
         {
             var manager = ExcelManager.StartInstance(isVisisble);
             Assert.AreEqual(isVisisble, manager.ExcelInstance.Visible);
+
+            KillExcelAndAssertKilled(manager);
+        }
+
+        [Test]
+        public void StartExcelOnOpenWorkbook()
+        {
+            var manager = new ExcelManager();
+            var path = ReflectionUtils.GetTestFilePath(@"Core\ExcelUtils\Test Workbook.xlsx");
+            manager.OpenWorkbook(path);
+
+            Assert.AreNotEqual(null, manager.ExcelInstance);
+            Excel.Workbook activeWorkbook = manager.ExcelInstance.ActiveWorkbook;
+            Excel.Worksheet activeSheet = activeWorkbook.ActiveSheet;
+            Assert.AreEqual("1224754", activeSheet.Name);
 
             KillExcelAndAssertKilled(manager);
         }

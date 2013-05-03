@@ -28,6 +28,11 @@ namespace Excemplate.Core.ExcelUtils
 
         public Excel.Workbook OpenWorkbook(string fileName)
         {
+            if (ExcelInstance == null)
+            {
+                Start();
+            }
+
             return ExcelInstance.Workbooks.Open(fileName);
         }
 
