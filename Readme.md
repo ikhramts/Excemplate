@@ -31,7 +31,7 @@ Building Excemplate
 
 Excemplate solution targets Visual Studio 2012.  The solution depends on
 
-* PowerPack for F# 3.0 for parsing the Excemplate expressions.  F# PowerPack can be downloaded [here](https://fsharppowerpack.codeplex.com/releases/view/99231).  After installing it, add `C:\Program Files (x86)\FSharpPowerPack-4.0.0.0\bin` or equivalent path to system `PATH`.
+* [PowerPack for F# 3.0](https://fsharppowerpack.codeplex.com/releases/view/99231) for parsing the Excemplate expressions.  F# PowerPack can be downloaded [here](https://fsharppowerpack.codeplex.com/releases/view/99231).  After installing it, add `C:\Program Files (x86)\FSharpPowerPack-4.0.0.0\bin` or equivalent path to system `PATH`.
 * [NUnit](http://www.nunit.org/) for testing.
 
 Once these two are installed, build the Excemplate solution.
@@ -61,7 +61,7 @@ This section contains things that will be skipped for the first release, but may
 * Add ability to handle cell references.
 
 **ExcelManager:**
-* Make ExcelManager into an IDisposable, and make it dispose of Excel when the process is killed.
+* Make ExcelManager into an IDisposable, and make it dispose of Excel when the process crashes.
 * Rename ExcelManager.Stop() to ExcelManager.Close();
 
 
