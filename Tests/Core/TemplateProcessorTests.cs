@@ -43,6 +43,18 @@ namespace Excemplate.Tests.Core
         }
 
         [Test]
+        public void ProcessCellTest()
+        {
+            Excel.Worksheet basicTestsSheet = ExcelManager.ExcelInstance.ActiveWorkbook.Sheets["Basic Tests"];
+            Excel.Range fullRange = basicTestsSheet.Range["C5"];
+            Processor.Process(fullRange);
+
+            // Check the result.
+            var passed = basicTestsSheet.Range["E5"].Value;
+            Assert.AreEqual(true, passed);
+        }
+
+        [Test]
         public void ProcessSheetTest()
         {
             Excel.Worksheet basicTestsSheet = ExcelManager.ExcelInstance.ActiveWorkbook.Sheets["Basic Tests"];

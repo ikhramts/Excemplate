@@ -19,7 +19,7 @@ namespace Excemplate.Tests.LanguageEvaluator
         // First dimension represents rows, second dimension represents columns.
         public static int[,] IntArray2D = new int[2, 3] {
             {2, 5, 0},
-            {5, 6, 12},
+            {5, -6, 12},
         };
 
         /// <summary>
