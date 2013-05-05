@@ -11,6 +11,7 @@ and Literal =
     | Int of int
     | Double of double
     | String of string
+    | Date of DateTime
 
 and Argument = 
     | NamedArgument of string * Expression

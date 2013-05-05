@@ -6,6 +6,7 @@ type token =
   | LBRACKET
   | RBRACKET
   | COMMA
+  | DATETIME of (DateTime)
   | STRING of (string)
   | DOUBLE of (double)
   | INT of (int)
@@ -16,6 +17,7 @@ type tokenId =
     | TOKEN_LBRACKET
     | TOKEN_RBRACKET
     | TOKEN_COMMA
+    | TOKEN_DATETIME
     | TOKEN_STRING
     | TOKEN_DOUBLE
     | TOKEN_INT

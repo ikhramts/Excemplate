@@ -20,6 +20,8 @@ let brackets =
 
 let char = ['a'-'z' 'A'-'Z']
 let digit = ['0' - '9']
+let quote = '"'
+let datetime = digit digit digit digit '-' digit digit '-' digit digit ('T' digit digit ':' digit digit (':' digit digit ('.' digit+)?)?)?
 let int = '-'?digit+
 let double = '-'?digit*'.'digit+
 let identifier = char(char|digit|'_')*
@@ -28,11 +30,11 @@ let newline = "\r\n" | '\n' | '\r'
 let bracket = '(' | ')'
 let eq = '='
 let escapedQuote = "\"\"" | "\\\""
-let quote = '"'
 
 rule tokenize = parse
 | whitespace { tokenize lexbuf }
 | newline { tokenize lexbuf }
+| datetime { DATETIME(DateTime.Parse(lexeme lexbuf)) } 
 | int { INT(Int32.Parse(lexeme lexbuf)) }
 | double { DOUBLE(Double.Parse(lexeme lexbuf)) }
 | identifier { ID(lexeme lexbuf) }

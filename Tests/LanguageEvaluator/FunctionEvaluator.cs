@@ -55,6 +55,9 @@ namespace Excemplate.Tests.LanguageEvaluator
                 case "GetIntArray2D":
                     return IntArray2D;
 
+                case "Month":
+                    return ((DateTime)args["date"]).Month;
+
                 default:
                     throw new Exception("Unknown function \"" + functionName + "\"");
             }

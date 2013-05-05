@@ -47,6 +47,7 @@ type public Evaluator(evalFunc:FunctionCallHandlerDelegate) =
             | Int(i) -> i :> Object
             | Double(d) -> d :> Object
             | String(s) -> s :> Object
+            | Date(d) -> d :> Object
 
         and evaluateArgs args =
             let dictionary = new Dictionary<string, Object>()

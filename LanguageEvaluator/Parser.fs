@@ -5,9 +5,10 @@ open Microsoft.FSharp.Text.Lexing
 open Microsoft.FSharp.Text.Parsing.ParseHelpers
 # 1 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
 
+open System
 open Excemplate.Language.SyntaxTree
 
-# 10 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 11 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
 // This type is the type of tokens accepted by the parser
 type token = 
   | EOF
@@ -15,6 +16,7 @@ type token =
   | LBRACKET
   | RBRACKET
   | COMMA
+  | DATETIME of (DateTime)
   | STRING of (string)
   | DOUBLE of (double)
   | INT of (int)
@@ -26,6 +28,7 @@ type tokenId =
     | TOKEN_LBRACKET
     | TOKEN_RBRACKET
     | TOKEN_COMMA
+    | TOKEN_DATETIME
     | TOKEN_STRING
     | TOKEN_DOUBLE
     | TOKEN_INT
@@ -49,10 +52,11 @@ let tagOfToken (t:token) =
   | LBRACKET  -> 2 
   | RBRACKET  -> 3 
   | COMMA  -> 4 
-  | STRING _ -> 5 
-  | DOUBLE _ -> 6 
-  | INT _ -> 7 
-  | ID _ -> 8 
+  | DATETIME _ -> 5 
+  | STRING _ -> 6 
+  | DOUBLE _ -> 7 
+  | INT _ -> 8 
+  | ID _ -> 9 
 
 // This function maps integers indexes to symbolic token ids
 let tokenTagToTokenId (tokenIdx:int) = 
@@ -62,12 +66,13 @@ let tokenTagToTokenId (tokenIdx:int) =
   | 2 -> TOKEN_LBRACKET 
   | 3 -> TOKEN_RBRACKET 
   | 4 -> TOKEN_COMMA 
-  | 5 -> TOKEN_STRING 
-  | 6 -> TOKEN_DOUBLE 
-  | 7 -> TOKEN_INT 
-  | 8 -> TOKEN_ID 
-  | 11 -> TOKEN_end_of_input
-  | 9 -> TOKEN_error
+  | 5 -> TOKEN_DATETIME 
+  | 6 -> TOKEN_STRING 
+  | 7 -> TOKEN_DOUBLE 
+  | 8 -> TOKEN_INT 
+  | 9 -> TOKEN_ID 
+  | 12 -> TOKEN_end_of_input
+  | 10 -> TOKEN_error
   | _ -> failwith "tokenTagToTokenId: bad token"
 
 /// This function maps production indexes returned in syntax errors to strings representing the non terminal that would be produced by that production
@@ -83,13 +88,14 @@ let prodIdxToNonTerminal (prodIdx:int) =
     | 7 -> NONTERM_literal 
     | 8 -> NONTERM_literal 
     | 9 -> NONTERM_literal 
-    | 10 -> NONTERM_argumentList 
+    | 10 -> NONTERM_literal 
     | 11 -> NONTERM_argumentList 
-    | 12 -> NONTERM_argument 
+    | 12 -> NONTERM_argumentList 
+    | 13 -> NONTERM_argument 
     | _ -> failwith "prodIdxToNonTerminal: bad production index"
 
-let _fsyacc_endOfInputTag = 11 
-let _fsyacc_tagOfErrorTerminal = 9
+let _fsyacc_endOfInputTag = 12 
+let _fsyacc_tagOfErrorTerminal = 10
 
 // This function gets the name of a token as a string
 let token_to_string (t:token) = 
@@ -99,6 +105,7 @@ let token_to_string (t:token) =
   | LBRACKET  -> "LBRACKET" 
   | RBRACKET  -> "RBRACKET" 
   | COMMA  -> "COMMA" 
+  | DATETIME _ -> "DATETIME" 
   | STRING _ -> "STRING" 
   | DOUBLE _ -> "DOUBLE" 
   | INT _ -> "INT" 
@@ -112,22 +119,23 @@ let _fsyacc_dataOfToken (t:token) =
   | LBRACKET  -> (null : System.Object) 
   | RBRACKET  -> (null : System.Object) 
   | COMMA  -> (null : System.Object) 
+  | DATETIME _fsyacc_x -> Microsoft.FSharp.Core.Operators.box _fsyacc_x 
   | STRING _fsyacc_x -> Microsoft.FSharp.Core.Operators.box _fsyacc_x 
   | DOUBLE _fsyacc_x -> Microsoft.FSharp.Core.Operators.box _fsyacc_x 
   | INT _fsyacc_x -> Microsoft.FSharp.Core.Operators.box _fsyacc_x 
   | ID _fsyacc_x -> Microsoft.FSharp.Core.Operators.box _fsyacc_x 
-let _fsyacc_gotos = [| 0us; 65535us; 1us; 65535us; 0us; 1us; 3us; 65535us; 0us; 6us; 3us; 4us; 21us; 22us; 3us; 65535us; 0us; 8us; 3us; 8us; 21us; 8us; 2us; 65535us; 10us; 11us; 18us; 19us; 2us; 65535us; 10us; 17us; 18us; 17us; |]
+let _fsyacc_gotos = [| 0us; 65535us; 1us; 65535us; 0us; 1us; 3us; 65535us; 0us; 6us; 3us; 4us; 22us; 23us; 3us; 65535us; 0us; 8us; 3us; 8us; 22us; 8us; 2us; 65535us; 10us; 11us; 19us; 20us; 2us; 65535us; 10us; 18us; 19us; 18us; |]
 let _fsyacc_sparseGotoTableRowOffsets = [|0us; 1us; 3us; 7us; 11us; 14us; |]
-let _fsyacc_stateToProdIdxsTableElements = [| 1us; 0us; 1us; 0us; 4us; 1us; 4us; 5us; 6us; 1us; 1us; 1us; 1us; 1us; 1us; 1us; 2us; 1us; 2us; 1us; 3us; 3us; 4us; 5us; 6us; 2us; 5us; 6us; 1us; 5us; 1us; 5us; 1us; 6us; 1us; 7us; 1us; 8us; 1us; 9us; 2us; 10us; 11us; 1us; 11us; 1us; 11us; 1us; 12us; 1us; 12us; 1us; 12us; |]
-let _fsyacc_stateToProdIdxsTableRowOffsets = [|0us; 2us; 4us; 9us; 11us; 13us; 15us; 17us; 19us; 21us; 25us; 28us; 30us; 32us; 34us; 36us; 38us; 40us; 43us; 45us; 47us; 49us; 51us; |]
-let _fsyacc_action_rows = 23
-let _fsyacc_actionTableElements = [|4us; 32768us; 5us; 16us; 6us; 15us; 7us; 14us; 8us; 2us; 0us; 49152us; 2us; 16388us; 1us; 3us; 2us; 10us; 4us; 32768us; 5us; 16us; 6us; 15us; 7us; 14us; 8us; 9us; 1us; 32768us; 0us; 5us; 0us; 16385us; 1us; 32768us; 0us; 7us; 0us; 16386us; 0us; 16387us; 1us; 16388us; 2us; 10us; 2us; 32768us; 3us; 13us; 8us; 20us; 1us; 32768us; 3us; 12us; 0us; 16389us; 0us; 16390us; 0us; 16391us; 0us; 16392us; 0us; 16393us; 1us; 16394us; 4us; 18us; 1us; 32768us; 8us; 20us; 0us; 16395us; 1us; 32768us; 1us; 21us; 4us; 32768us; 5us; 16us; 6us; 15us; 7us; 14us; 8us; 9us; 0us; 16396us; |]
-let _fsyacc_actionTableRowOffsets = [|0us; 5us; 6us; 9us; 14us; 16us; 17us; 19us; 20us; 21us; 23us; 26us; 28us; 29us; 30us; 31us; 32us; 33us; 35us; 37us; 38us; 40us; 45us; |]
-let _fsyacc_reductionSymbolCounts = [|1us; 4us; 2us; 1us; 1us; 4us; 3us; 1us; 1us; 1us; 1us; 3us; 3us; |]
-let _fsyacc_productionToNonTerminalTable = [|0us; 1us; 1us; 2us; 2us; 2us; 2us; 3us; 3us; 3us; 4us; 4us; 5us; |]
-let _fsyacc_immediateActions = [|65535us; 49152us; 65535us; 65535us; 65535us; 16385us; 65535us; 16386us; 16387us; 65535us; 65535us; 65535us; 16389us; 16390us; 16391us; 16392us; 16393us; 65535us; 65535us; 16395us; 65535us; 65535us; 16396us; |]
+let _fsyacc_stateToProdIdxsTableElements = [| 1us; 0us; 1us; 0us; 4us; 1us; 4us; 5us; 6us; 1us; 1us; 1us; 1us; 1us; 1us; 1us; 2us; 1us; 2us; 1us; 3us; 3us; 4us; 5us; 6us; 2us; 5us; 6us; 1us; 5us; 1us; 5us; 1us; 6us; 1us; 7us; 1us; 8us; 1us; 9us; 1us; 10us; 2us; 11us; 12us; 1us; 12us; 1us; 12us; 1us; 13us; 1us; 13us; 1us; 13us; |]
+let _fsyacc_stateToProdIdxsTableRowOffsets = [|0us; 2us; 4us; 9us; 11us; 13us; 15us; 17us; 19us; 21us; 25us; 28us; 30us; 32us; 34us; 36us; 38us; 40us; 42us; 45us; 47us; 49us; 51us; 53us; |]
+let _fsyacc_action_rows = 24
+let _fsyacc_actionTableElements = [|5us; 32768us; 5us; 17us; 6us; 16us; 7us; 15us; 8us; 14us; 9us; 2us; 0us; 49152us; 2us; 16388us; 1us; 3us; 2us; 10us; 5us; 32768us; 5us; 17us; 6us; 16us; 7us; 15us; 8us; 14us; 9us; 9us; 1us; 32768us; 0us; 5us; 0us; 16385us; 1us; 32768us; 0us; 7us; 0us; 16386us; 0us; 16387us; 1us; 16388us; 2us; 10us; 2us; 32768us; 3us; 13us; 9us; 21us; 1us; 32768us; 3us; 12us; 0us; 16389us; 0us; 16390us; 0us; 16391us; 0us; 16392us; 0us; 16393us; 0us; 16394us; 1us; 16395us; 4us; 19us; 1us; 32768us; 9us; 21us; 0us; 16396us; 1us; 32768us; 1us; 22us; 5us; 32768us; 5us; 17us; 6us; 16us; 7us; 15us; 8us; 14us; 9us; 9us; 0us; 16397us; |]
+let _fsyacc_actionTableRowOffsets = [|0us; 6us; 7us; 10us; 16us; 18us; 19us; 21us; 22us; 23us; 25us; 28us; 30us; 31us; 32us; 33us; 34us; 35us; 36us; 38us; 40us; 41us; 43us; 49us; |]
+let _fsyacc_reductionSymbolCounts = [|1us; 4us; 2us; 1us; 1us; 4us; 3us; 1us; 1us; 1us; 1us; 1us; 3us; 3us; |]
+let _fsyacc_productionToNonTerminalTable = [|0us; 1us; 1us; 2us; 2us; 2us; 2us; 3us; 3us; 3us; 3us; 4us; 4us; 5us; |]
+let _fsyacc_immediateActions = [|65535us; 49152us; 65535us; 65535us; 65535us; 16385us; 65535us; 16386us; 16387us; 65535us; 65535us; 65535us; 16389us; 16390us; 16391us; 16392us; 16393us; 16394us; 65535us; 65535us; 16396us; 65535us; 65535us; 16397us; |]
 let _fsyacc_reductions ()  =    [| 
-# 130 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 138 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : SyntaxTree.Statement)) in
             Microsoft.FSharp.Core.Operators.box
@@ -136,150 +144,161 @@ let _fsyacc_reductions ()  =    [|
                       raise (Microsoft.FSharp.Text.Parsing.Accept(Microsoft.FSharp.Core.Operators.box _1))
                    )
                  : '_startstatement));
-# 139 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 147 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : string)) in
             let _3 = (let data = parseState.GetInput(3) in (Microsoft.FSharp.Core.Operators.unbox data : 'expression)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 20 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 22 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                               
                                  { AssignTo = Some(_1);
                                    Expression = _3; }
                              
                    )
-# 20 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 22 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : SyntaxTree.Statement));
-# 154 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 162 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : 'expression)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 26 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 28 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                               
                                  { AssignTo = None;
                                    Expression = _1;}
                              
                    )
-# 26 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 28 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : SyntaxTree.Statement));
-# 168 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 176 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : 'literal)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 32 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 34 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                      Value(_1) 
                    )
-# 32 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 34 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'expression));
-# 179 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 187 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : string)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 33 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 35 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                 Var(_1) 
                    )
-# 33 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 35 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'expression));
-# 190 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 198 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : string)) in
             let _3 = (let data = parseState.GetInput(3) in (Microsoft.FSharp.Core.Operators.unbox data : 'argumentList)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 34 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 36 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                                                Function(_1, _3) 
                    )
-# 34 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 36 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'expression));
-# 202 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 210 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : string)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 35 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 37 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                                   Function(_1, []) 
                    )
-# 35 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 37 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'expression));
-# 213 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 221 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : int)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 38 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 40 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                                    Int(_1) 
                    )
-# 38 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 40 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'literal));
-# 224 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 232 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : double)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 39 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 41 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                                    Double(_1) 
                    )
-# 39 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 41 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'literal));
-# 235 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 243 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : string)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 40 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 42 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                                    String(_1) 
                    )
-# 40 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 42 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'literal));
-# 246 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 254 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+        (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
+            let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : DateTime)) in
+            Microsoft.FSharp.Core.Operators.box
+                (
+                   (
+# 43 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+                                                   Date(_1) 
+                   )
+# 43 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+                 : 'literal));
+# 265 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : 'argument)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 43 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 46 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                       [_1] 
                    )
-# 43 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 46 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'argumentList));
-# 257 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 276 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : 'argument)) in
             let _3 = (let data = parseState.GetInput(3) in (Microsoft.FSharp.Core.Operators.unbox data : 'argumentList)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 44 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 47 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                                          _1 :: _3 
                    )
-# 44 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 47 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'argumentList));
-# 269 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 288 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
         (fun (parseState : Microsoft.FSharp.Text.Parsing.IParseState) ->
             let _1 = (let data = parseState.GetInput(1) in (Microsoft.FSharp.Core.Operators.unbox data : string)) in
             let _3 = (let data = parseState.GetInput(3) in (Microsoft.FSharp.Core.Operators.unbox data : 'expression)) in
             Microsoft.FSharp.Core.Operators.box
                 (
                    (
-# 46 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 49 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                                                   NamedArgument(_1, _3) 
                    )
-# 46 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
+# 49 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fsy"
                  : 'argument));
 |]
-# 282 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
+# 301 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Parser.fs"
 let tables () : Microsoft.FSharp.Text.Parsing.Tables<_> = 
   { reductions= _fsyacc_reductions ();
     endOfInputTag = _fsyacc_endOfInputTag;
@@ -298,7 +317,7 @@ let tables () : Microsoft.FSharp.Text.Parsing.Tables<_> =
                               match parse_error_rich with 
                               | Some f -> f ctxt
                               | None -> parse_error ctxt.Message);
-    numTerminals = 12;
+    numTerminals = 13;
     productionToNonTerminalTable = _fsyacc_productionToNonTerminalTable  }
 let engine lexer lexbuf startState = (tables ()).Interpret(lexer, lexbuf, startState)
 let statement lexer lexbuf : SyntaxTree.Statement =

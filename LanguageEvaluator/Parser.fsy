@@ -1,4 +1,5 @@
 ﻿%{
+open System
 open Excemplate.Language.SyntaxTree
 %}
 
@@ -6,6 +7,7 @@ open Excemplate.Language.SyntaxTree
 %token <int> INT
 %token <double> DOUBLE
 %token <string> STRING
+%token <DateTime> DATETIME
 
 %token EQ LBRACKET RBRACKET COMMA
 %token EOF
@@ -38,6 +40,7 @@ literal:
     | INT                   { Int($1) }   
     | DOUBLE                { Double($1) } 
     | STRING                { String($1) }
+    | DATETIME              { Date($1) }
 
 argumentList:
     | argument { [$1] }

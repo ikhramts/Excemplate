@@ -55,6 +55,10 @@ namespace Excemplate.Tests.LanguageEvaluator
         [TestCase("MultiplyByThree(val=Add(first=GetFour(), second=2.5))", 19.5)]
         [TestCase("MultiplyByThree \t(val =Add(first=GetFour() ,second= 2.5) ) ", 19.5)]
 
+        // Dates
+        [TestCase("Month(date= 2012-05-05T12:31 )", 5)]
+        [TestCase("MultiplyByThree \t(val =Month(date= 2012-07-05T12:31\t ) ) ", 21)]
+
         // Assignments should return null.
         [TestCase("var=0", null)]
         [TestCase("var=\"hello\"", null)]
@@ -79,6 +83,40 @@ namespace Excemplate.Tests.LanguageEvaluator
             var result = evaluator.Evaluate("GetObjectList()");
             Assert.AreEqual(FunctionEvaluator.ObjectList, result);
             Assert.AreNotEqual(FunctionEvaluator.ObjectList.ToArray().GetType(), result.GetType());
+        }
+
+        [Test]
+        [TestCase("2013-05-05")]
+        [TestCase("2013-05-05T23:01")]
+        [TestCase("2013-05-05T23:01:52")]
+        [TestCase("2013-05-05T23:01:52.635")]
+        [TestCase("1602-02-12")]
+        [TestCase("2012-02-29")]
+        public void EvaluateDate(string expression)
+        {
+            var expected = DateTime.Parse(expression);
+            var result = evaluator.Evaluate(expression);
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        [TestCase("2013-05")]
+        [TestCase("2013-05-05 23:01")]
+        [TestCase("2013-05-05 23:01:05")]
+        [TestCase("2013-05-05T23")]
+        [TestCase("2013-05-05T23:01:52.635Z")]
+        [TestCase("2013-25-21")]
+        [TestCase("2013-30-01")]
+        [TestCase("20132-01-30")]
+        [TestCase("2013-02-29")]
+        [TestCase("2013-02-28T25:01")]
+        [TestCase("2013-02-28T24:01")]
+        [TestCase("2013-02-28T23:61")]
+        [TestCase("2013-02-28T23:12:78")]
+        [ExpectedException]
+        public void EvaluateInvalidDate(string expression)
+        {
+            evaluator.Evaluate(expression);
         }
 
         //*******************************************
