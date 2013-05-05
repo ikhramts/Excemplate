@@ -134,11 +134,19 @@ namespace Excemplate.Tests.Core
         private void AssertWorksheetProcessed(Excel.Worksheet sheet) {
             var passed = (bool) sheet.get_Range("Passed").Value;
             Assert.AreEqual(true, passed);
+
         }
 
         private void AssertWorkbookProcessed(Excel.Workbook workbook)
         {
-            foreach (Excel.Worksheet sheet in workbook.Sheets) {
+            // Also check that the initializer sheet was deleted.
+            foreach (Excel.Worksheet sheet in workbook.Sheets)
+            {
+                if (sheet.Name == TemplateProcessor.INITIALIZER_SHEET)
+                {
+                    Assert.Fail("Initializer sheet was not deleted.");
+                }
+
                 AssertWorksheetProcessed(sheet);
             }
         }

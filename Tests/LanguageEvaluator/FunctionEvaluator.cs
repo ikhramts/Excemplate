@@ -9,7 +9,7 @@ namespace Excemplate.Tests.LanguageEvaluator
     public class FunctionEvaluator
     {
         public static List<object> ObjectList = new List<object>() {
-            "test", 2, 3.4,
+            "test", 2, DateTime.Parse("2013-05-06T08:22:00"),
         };
 
         public static List<string> StringList = new List<string> {

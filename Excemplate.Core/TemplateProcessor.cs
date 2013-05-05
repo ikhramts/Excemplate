@@ -25,6 +25,9 @@ namespace Excemplate.Core
     {
         //****************** Public Constants ********************//
         public const char COMMAND_CHAR = '|';
+        public const string ONSTART_MACRO = "OnExcemplateStart";
+        public const string ONEND_MACRO = "OnExcemplateEnd";
+        public const string INITIALIZER_SHEET = "|Initialize";
 
         //****************** Public Properties ********************//
         public ProcessFunctionDelegate FunctionHandler
@@ -90,6 +93,34 @@ namespace Excemplate.Core
 
         public void Process(Excel.Workbook workbook)
         {
+            var excel = workbook.Application;
+            excel.Run(ONSTART_MACRO);
+
+            // Process and remove "|Initialize" worksheet.
+            Excel.Worksheet initializerSheet = null;
+
+            foreach (Excel.Worksheet sheet in workbook.Sheets)
+            {
+                if (sheet.Name == INITIALIZER_SHEET)
+                {
+                    initializerSheet = sheet;
+                    break;
+                }
+            }
+
+            if (initializerSheet != null)
+            {
+                Process(initializerSheet);
+                initializerSheet.Delete();
+            }
+
+            // Process all other sheets in no particular order.
+            foreach (Excel.Worksheet sheet in workbook.Sheets)
+            {
+                Process(sheet);
+            }
+
+            excel.Run(ONEND_MACRO);
         }
 
         public void ProcessFile(string templateFile, string outFileName)
@@ -97,6 +128,11 @@ namespace Excemplate.Core
         }
 
         //****************** Private Functions ********************//
+        private void InvokeMacro(Excel.Application excel, string macroName)
+        {
+            excel.Run(macroName);
+        }
+
         /// <summary>
         /// Process a range that is guaranteed to have only one cell.  This function 
         /// may affect cells to the right and bottom of the provided cell if the result
@@ -137,6 +173,7 @@ namespace Excemplate.Core
             if (result == null)
             {
                 cell.Value = null;
+                return;
             }
 
             var resultType = result.GetType();
