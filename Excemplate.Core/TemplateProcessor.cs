@@ -25,8 +25,8 @@ namespace Excemplate.Core
     {
         //****************** Public Constants ********************//
         public const char COMMAND_CHAR = '|';
-        public const string ONSTART_MACRO = "OnExcemplateStart";
-        public const string ONEND_MACRO = "OnExcemplateEnd";
+        public const string ON_START_MACRO = "OnExcemplateStart";
+        public const string ON_END_MACRO = "OnExcemplateEnd";
         public const string INITIALIZER_SHEET = "|Initialize";
 
         //****************** Public Properties ********************//
@@ -94,7 +94,7 @@ namespace Excemplate.Core
         public void Process(Excel.Workbook workbook)
         {
             var excel = workbook.Application;
-            excel.Run(ONSTART_MACRO);
+            InvokeMacroIfExists(excel, ON_START_MACRO);
 
             // Process and remove "|Initialize" worksheet.
             Excel.Worksheet initializerSheet = null;
@@ -120,7 +120,7 @@ namespace Excemplate.Core
                 Process(sheet);
             }
 
-            excel.Run(ONEND_MACRO);
+            InvokeMacroIfExists(excel, ON_END_MACRO);
         }
 
         public void ProcessFile(string templateFile, string outFileName)
@@ -141,6 +141,19 @@ namespace Excemplate.Core
         }
 
         //****************** Private Functions ********************//
+        private void InvokeMacroIfExists(Excel.Application excel, string name)
+        {
+            try
+            {
+                excel.Run(name);
+            }
+            catch (Exception)
+            {
+                // Gulp!  Swallowed.
+                // If it couldn't be invoked, then we won't be invoking it.
+            }
+        }
+
         /// <summary>
         /// Process a range that is guaranteed to have only one cell.  This function 
         /// may affect cells to the right and bottom of the provided cell if the result

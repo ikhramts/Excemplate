@@ -106,7 +106,7 @@ namespace Excemplate.Tests.Core
 
             // Check whether it was deleted
             var excelManager = ExcelManager.StartInstance();
-
+            
             try
             {
                 var outWorkbook = ReflectionUtils.GetTestFilePath(@"Core\Cross Sheet Template.xlsx");
