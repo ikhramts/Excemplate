@@ -51,6 +51,7 @@ namespace Excemplate.Core
         //****************** Public Methods ********************//
         public void DeleteVariables()
         {
+            ExpressionEvaluator.DeleteVariables();
         }
 
         public void Process(Excel.Range range)
@@ -74,6 +75,17 @@ namespace Excemplate.Core
 
         public void Process(Excel.Worksheet sheet)
         {
+            // Apply Process() to UsedRange.  But shouldn't process UsedRange directly
+            // because it's a funky dynamic property.
+            var usedRange = sheet.UsedRange;
+            var startRow = usedRange.Row;
+            var endRow = startRow + usedRange.Rows.Count - 1;
+            var startColumn = usedRange.Column;
+            var endColumn = startColumn + usedRange.Columns.Count - 1;
+
+            var rangeAddress = DataConverter.A1FromRectangle(startRow, startColumn, endRow, endColumn);
+            var rangeToProcess = sheet.Range[rangeAddress];
+            Process(rangeToProcess);
         }
 
         public void Process(Excel.Workbook workbook)

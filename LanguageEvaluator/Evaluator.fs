@@ -21,6 +21,10 @@ type public Evaluator(evalFunc:FunctionCallHandlerDelegate) =
         variables.Remove(name) |> ignore
         ()
 
+    member public this.DeleteVariables () =
+        variables.Clear()
+        ()
+
     /// <summary>Evaluates an Excemplate statement and either returns the result or 
     /// saves the result to an internal variable dictionary, depending on the type of
     /// statement </summary>
