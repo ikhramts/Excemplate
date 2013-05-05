@@ -125,6 +125,19 @@ namespace Excemplate.Core
 
         public void ProcessFile(string templateFile, string outFileName)
         {
+            var excelManager = ExcelManager.StartInstance();
+
+            try
+            {
+                var workbook = excelManager.OpenWorkbook(templateFile);
+                Process(workbook);
+                workbook.SaveAs(outFileName);
+
+            }
+            finally
+            {
+                excelManager.Stop();
+            }
         }
 
         //****************** Private Functions ********************//
