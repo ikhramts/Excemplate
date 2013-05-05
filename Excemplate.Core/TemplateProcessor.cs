@@ -128,11 +128,6 @@ namespace Excemplate.Core
         }
 
         //****************** Private Functions ********************//
-        private void InvokeMacro(Excel.Application excel, string macroName)
-        {
-            excel.Run(macroName);
-        }
-
         /// <summary>
         /// Process a range that is guaranteed to have only one cell.  This function 
         /// may affect cells to the right and bottom of the provided cell if the result
