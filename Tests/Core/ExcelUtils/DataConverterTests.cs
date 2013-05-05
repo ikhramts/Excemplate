@@ -35,5 +35,29 @@ namespace Excemplate.Tests.Core.ExcelUtils
             var result = DataConverter.ExcelFromDotNet(date);
             Assert.AreEqual(excelDate, result);
         }
+
+        [Test]
+        [TestCase(1, 1, "A1")]
+        [TestCase(7, 12, "L7")]
+        [TestCase(10223, 9, "I10223")]
+        [TestCase(7, 27, "AA7")]
+        [TestCase(7, 218, "HJ7")]
+        [TestCase(7, 702, "ZZ7")]
+        [TestCase(7, 703, "AAA7")]
+        [TestCase(7, 2795, "DCM7")]
+        public void A1FromRowColTests(int row, int col, string expected)
+        {
+            var result = DataConverter.A1FromRowCol(row, col);
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        [TestCase(1, 1, 1, 1, "A1:A1")]
+        [TestCase(2, 3, 7, 2795, "C2:DCM7")]
+        public void A1FromRectangleTests(int minRow, int minCol, int maxRow, int maxCol, string expected)
+        {
+            var result = DataConverter.A1FromRectangle(minRow, minCol, maxRow, maxCol);
+            Assert.AreEqual(expected, result);
+        }
     }
 }
