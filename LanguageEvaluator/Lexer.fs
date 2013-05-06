@@ -6,6 +6,7 @@ open Microsoft.FSharp.Text.Lexing
 open System
 open System.Text.RegularExpressions
 
+open Excemplate.Language
 open Excemplate.Language.SyntaxTree
 open Excemplate.Language.Parser
 
@@ -18,7 +19,7 @@ let brackets =
     ] |> Map.ofList
         
 
-# 21 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
+# 22 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
 let trans : uint16[] array = 
     [| 
     (* State 0 *)
@@ -113,62 +114,66 @@ and tokenize  (lexbuf : Microsoft.FSharp.Text.Lexing.LexBuffer<_>) = _fslex_toke
 and _fslex_tokenize  _fslex_state lexbuf =
   match _fslex_tables.Interpret(_fslex_state,lexbuf) with
   | 0 -> ( 
-# 35 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+# 36 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
                               tokenize lexbuf 
-# 118 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
+# 119 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
   | 1 -> ( 
-# 36 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                           tokenize lexbuf 
-# 123 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
+# 37 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+                           lexbuf.EndPos <- lexbuf.EndPos.NextLine; tokenize lexbuf 
+# 124 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
   | 2 -> ( 
-# 37 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                            DATETIME(DateTime.Parse(lexeme lexbuf)) 
-# 128 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
-          )
-  | 3 -> ( 
 # 38 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                       INT(Int32.Parse(lexeme lexbuf)) 
+                            let dateTime = 
+                               try DateTime.Parse(lexeme lexbuf)
+                               with
+                               | ex as FormatException -> raise(new InvalidDateException((lexeme lexbuf), ex))
+                            DATETIME(dateTime) 
 # 133 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
-  | 4 -> ( 
-# 39 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                          DOUBLE(Double.Parse(lexeme lexbuf)) 
+  | 3 -> ( 
+# 43 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+                       INT(Int32.Parse(lexeme lexbuf)) 
 # 138 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
-  | 5 -> ( 
-# 40 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                              ID(lexeme lexbuf) 
+  | 4 -> ( 
+# 44 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+                          DOUBLE(Double.Parse(lexeme lexbuf)) 
 # 143 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
-  | 6 -> ( 
-# 41 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                       EQ 
+  | 5 -> ( 
+# 45 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+                              ID(lexeme lexbuf) 
 # 148 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
-  | 7 -> ( 
-# 42 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                       COMMA 
+  | 6 -> ( 
+# 46 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+                       EQ 
 # 153 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
-  | 8 -> ( 
-# 43 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                           brackets.[lexeme lexbuf] 
+  | 7 -> ( 
+# 47 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+                       COMMA 
 # 158 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
-  | 9 -> ( 
-# 44 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                                     STRING(let s = lexeme lexbuf in s.Substring(1, s.Length - 2)) 
+  | 8 -> ( 
+# 48 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+                           brackets.[lexeme lexbuf] 
 # 163 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
-  | 10 -> ( 
-# 45 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
-                       EOF 
+  | 9 -> ( 
+# 49 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+                                     STRING(let s = lexeme lexbuf in s.Substring(1, s.Length - 2)) 
 # 168 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
+          )
+  | 10 -> ( 
+# 50 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+                       EOF 
+# 173 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )
   | _ -> failwith "tokenize"
 
-# 48 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
+# 53 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fsl"
 
 # 3000000 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"

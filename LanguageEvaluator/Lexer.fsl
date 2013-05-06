@@ -5,6 +5,7 @@ open Microsoft.FSharp.Text.Lexing
 open System
 open System.Text.RegularExpressions
 
+open Excemplate.Language
 open Excemplate.Language.SyntaxTree
 open Excemplate.Language.Parser
 
@@ -33,8 +34,12 @@ let escapedQuote = "\"\"" | "\\\""
 
 rule tokenize = parse
 | whitespace { tokenize lexbuf }
-| newline { tokenize lexbuf }
-| datetime { DATETIME(DateTime.Parse(lexeme lexbuf)) } 
+| newline { lexbuf.EndPos <- lexbuf.EndPos.NextLine; tokenize lexbuf }
+| datetime { let dateTime = 
+                try DateTime.Parse(lexeme lexbuf)
+                with
+                | ex as FormatException -> raise(new InvalidDateException((lexeme lexbuf), ex))
+             DATETIME(dateTime) } 
 | int { INT(Int32.Parse(lexeme lexbuf)) }
 | double { DOUBLE(Double.Parse(lexeme lexbuf)) }
 | identifier { ID(lexeme lexbuf) }
