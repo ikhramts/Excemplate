@@ -56,6 +56,7 @@ This section contains things that will be skipped for the first release, but may
 * Produce more descriptive errors.
 * Add quote escaping in string literals.
 * Add ordered (i.e. not named) function arguments.
+* Maybe emit some debug info, so that some exceptions don't get swallowed completely silently?
 * Maybe modify the abstract syntax tree evaluator to be tail-recursive?  This is a very low priority task, I do not foresee anyone writing stack-blowing expressions in Excel cells.
 * Add ability to handle arrays.
 * Add ability to handle cell references.
