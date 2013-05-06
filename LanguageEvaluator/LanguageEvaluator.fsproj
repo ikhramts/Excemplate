@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="ParserException.fs" />
     <Compile Include="InvalidDateException.fs" />
+    <Compile Include="FunctionEvaluatorException.fs" />
     <Compile Include="SyntaxTree.fs" />
     <None Include="Lexer.fsl" />
     <None Include="Parser.fsy" />

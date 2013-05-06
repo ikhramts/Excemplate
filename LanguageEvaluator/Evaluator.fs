@@ -40,7 +40,12 @@ type public Evaluator(evalFunc:FunctionCallHandlerDelegate) =
             match expr with
             | Value(value) -> evaluateValue value
             | Var(v) -> variables.[v]
-            | Function(name, args) -> this.EvalFunc.Invoke(name, (evaluateArgs args))
+            | Function(name, args) -> 
+                let evaluatedArgs = evaluateArgs args
+                                      
+                try this.EvalFunc.Invoke(name, evaluatedArgs)
+                with
+                | ex as Exception -> raise(new FunctionEvaluatorException(name, evaluatedArgs, ex))
         
         and evaluateValue value = 
             match value with
