@@ -35,28 +35,31 @@ namespace Excemplate.Tests.LanguageEvaluator
                 case "Add":
                     return Convert.ToDouble(args["first"]) + Convert.ToDouble(args["second"]);
 
+                case "CauseException":
+                    throw new ArgumentException("I object!");
+
                 case "GetFour": return 4;
-
-                case "MultiplyByThree":
-                    return Convert.ToDouble(args["val"]) * 3;
-
-                case "GetObjectList":
-                    return ObjectList;
-
-                case "GetStringList":
-                    return StringList;
-
-                case "GetObjectArray":
-                    return ObjectList.ToArray();
-
-                case "GetStringArray":
-                    return StringList.ToArray();
 
                 case "GetIntArray2D":
                     return IntArray2D;
 
+                case "GetObjectArray":
+                    return ObjectList.ToArray();
+
+                case "GetObjectList":
+                    return ObjectList;
+
+                case "GetStringArray":
+                    return StringList.ToArray();
+
+                case "GetStringList":
+                    return StringList;
+
                 case "Month":
                     return ((DateTime)args["date"]).Month;
+
+                case "MultiplyByThree":
+                    return Convert.ToDouble(args["val"]) * 3;
 
                 default:
                     throw new Exception("Unknown function \"" + functionName + "\"");

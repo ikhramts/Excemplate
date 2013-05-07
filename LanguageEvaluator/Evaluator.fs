@@ -62,20 +62,16 @@ type public Evaluator(evalFunc:FunctionCallHandlerDelegate) =
 
             dictionary
 
-        let raseParserException (lexbuf:Lexing.LexBuffer<char>) (innerException:Exception) =
-            let parserException = new ParserException(innerException)
-            parserException.LineNum <- lexbuf.EndPos.Line
-            parserException.CharNum <- lexbuf.EndPos.Column
-            raise parserException
-
         // Parse the line and evaluate the result.
         let lexingBuffer = Lexing.LexBuffer<char>.FromString(statement)
-        let syntaxTree = //Parser.statement Lexer.tokenize lexingBuffer
+        let syntaxTree =
             try Parser.statement Lexer.tokenize lexingBuffer
             with
-            | ex as Exception -> match ex.Message with
-                                 | "parse error" -> raseParserException lexingBuffer ex
-                                 | _ -> reraise()
+            | ex as Exception -> 
+                match ex.Message with
+                | "parse error" -> raise(new UnexpectedTokenException(lexingBuffer, ex))
+                | "unrecognized input" -> raise(new UnrecognizedInputException(lexingBuffer, ex))
+                | _ -> reraise()
         
         let result = evaluateExpression syntaxTree.Expression
         

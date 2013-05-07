@@ -100,24 +100,78 @@ namespace Excemplate.Tests.LanguageEvaluator
         }
 
         [Test]
-        [TestCase("2013-05")]
-        [TestCase("2013-05-05 23:01")]
-        [TestCase("2013-05-05 23:01:05")]
-        [TestCase("2013-05-05T23")]
-        [TestCase("2013-05-05T23:01:52.635Z")]
         [TestCase("2013-25-21")]
         [TestCase("2013-30-01")]
-        [TestCase("20132-01-30")]
         [TestCase("2013-02-29")]
         [TestCase("2013-02-28T25:01")]
         [TestCase("2013-02-28T24:01")]
         [TestCase("2013-02-28T23:61")]
         [TestCase("2013-02-28T23:12:78")]
-        [ExpectedException]
-        public void EvaluateInvalidDate(string expression)
+        [ExpectedException(typeof(InvalidDateException))]
+        public void InvalidDate(string expression)
         {
             evaluator.Evaluate(expression);
         }
+
+        [Test]
+        [TestCase("&", 0)]
+        [TestCase("2 &", 2)]
+        [TestCase("2&", 1)]
+        [TestCase("var\\t = GetFour()", 3)]
+        public void UnrecognizedInput(string expression, int expectedCharNum)
+        {
+            try
+            {
+                evaluator.Evaluate(expression);
+                Assert.Fail("Expected an UnrecognizedInputException.");
+            }
+            catch (UnrecognizedInputException ex)
+            {
+                Assert.AreEqual(expectedCharNum, ex.CharNum);
+                Assert.AreEqual(0, ex.LineNum);
+            }
+        }
+
+        [Test]
+        [TestCase("2013-05", 4, "-05")]
+        [TestCase("var=MultiplyByThree( (=6)", 21, "(")]
+        [TestCase("2013-05-05T23", 10, "T23")]
+        [TestCase("2013-05-05T23:01:52.635Z", 23, "Z")]
+        [TestCase("20132-01-30", 5, "-01")]
+        [TestCase("2013-05-05 23:01", 11, "23")]
+        [TestCase("2013-05-05 23:01:05", 11, "23")]
+        public void UnexpectedToken(string expression, int expectedCharNum, string badToken)
+        {
+            try
+            {
+                evaluator.Evaluate(expression);
+                Assert.Fail("Expected an UnexpectedTokenException.");
+            }
+            catch (UnexpectedTokenException ex)
+            {
+                Assert.AreEqual(badToken, ex.Token);
+                Assert.AreEqual(expectedCharNum, ex.CharNum);
+                Assert.AreEqual(0, ex.LineNum);
+            }
+        }
+
+        [Test]
+        public void CauseFunctionEvaluatorException()
+        {
+            try
+            {
+                evaluator.Evaluate("CauseException(first=5)");
+                Assert.Fail("Expected a FunctionEvaluatorException.");
+            }
+            catch (FunctionEvaluatorException ex)
+            {
+                Assert.AreEqual("CauseException", ex.FunctionName);
+                Assert.AreNotEqual(null, ex.FunctionArgs);
+                Assert.AreEqual(5, ex.FunctionArgs["first"]);
+                Assert.AreEqual(1, ex.FunctionArgs.Count);
+            }
+        }
+        
 
         //*******************************************
         [Test]

@@ -6,7 +6,7 @@ open System.Linq
 open System.Text
 
 type public FunctionEvaluatorException(funcName:string, args:Dictionary<string, Object>, message:string, innerException:Exception) = 
-    inherit Exception(message, innerException)
+    inherit LanguageEvaluatorException(message, innerException)
 
     let mutable functionName_ = funcName
     let mutable functionArgs_ = args

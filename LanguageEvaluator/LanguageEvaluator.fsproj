@@ -36,7 +36,9 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
   <ItemGroup>
-    <Compile Include="ParserException.fs" />
+    <Compile Include="LanguageEvaluatorException.fs" />
+    <Compile Include="UnrecognizedInputException.fs" />
+    <Compile Include="UnexpectedTokenException.fs" />
     <Compile Include="InvalidDateException.fs" />
     <Compile Include="FunctionEvaluatorException.fs" />
     <Compile Include="SyntaxTree.fs" />
