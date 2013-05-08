@@ -11,11 +11,13 @@ type public UnexpectedTokenException(line:int, character:int, token:string, mess
     let token_ = token
 
     (*************** Other Constructors *****************)
-    new(lexbuf:Lexing.LexBuffer<char>, innerException) = 
+    new(lexbuf:Lexing.LexBuffer<char>, innerException, command) = 
         let token = new String(lexbuf.Lexeme)
         let character = lexbuf.EndPos.Column - token.Length
         let line = lexbuf.EndPos.Line
-        let message:string = "Invalid element '" + token + "' at line " + (line + 1).ToString() + " column " + (character + 1).ToString() + "."
+        let message:string = "Misplaced element '" + token + "' at line " + (line + 1).ToString() + 
+                             " column " + (character + 1).ToString() + 
+                             ". Input was: \"" + command + "\"."
         UnexpectedTokenException(line, character, token, message, innerException)
     
     (*************** Public Properties *****************)

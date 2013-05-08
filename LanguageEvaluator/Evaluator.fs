@@ -69,8 +69,8 @@ type public Evaluator(evalFunc:FunctionCallHandlerDelegate) =
             with
             | ex as Exception -> 
                 match ex.Message with
-                | "parse error" -> raise(new UnexpectedTokenException(lexingBuffer, ex))
-                | "unrecognized input" -> raise(new UnrecognizedInputException(lexingBuffer, ex))
+                | "parse error" -> raise(new UnexpectedTokenException(lexingBuffer, ex, statement))
+                | "unrecognized input" -> raise(new UnrecognizedInputException(lexingBuffer, ex, statement))
                 | _ -> reraise()
         
         let result = evaluateExpression syntaxTree.Expression

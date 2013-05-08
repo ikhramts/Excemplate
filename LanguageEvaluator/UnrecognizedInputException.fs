@@ -1,18 +1,26 @@
 ﻿namespace Excemplate.Language
 
 open System
+open System.Text
 open Microsoft.FSharp.Text.Lexing
 
-type public UnrecognizedInputException(line:int, character:int, innerException:Exception) =
-    inherit LanguageEvaluatorException(null, innerException)
+type public UnrecognizedInputException(line:int, column:int, message:string, innerException:Exception) =
+    inherit LanguageEvaluatorException(message, innerException)
     let mutable lineNum = line
-    let mutable charNum = character
+    let mutable charNum = column
 
     (*************** Other Constructors *****************)
-    new(lexbuf:Lexing.LexBuffer<char>, innerException) = 
+    new(lexbuf:Lexing.LexBuffer<char>, innerException, command:string) = 
         let line = lexbuf.EndPos.Line
-        let character = lexbuf.EndPos.Column
-        UnrecognizedInputException(line, character, innerException)
+        let column = lexbuf.EndPos.Column
+        let message = 
+            "Unexpected character at line " + (line + 1).ToString() + 
+            " column " + (column + 1).ToString() + 
+            ".  Input was: \"" + command + "\"."
+
+        UnrecognizedInputException(line, column, message, innerException)
+
+                
 
     (*************** Public Properties *****************)
     member public this.LineNum

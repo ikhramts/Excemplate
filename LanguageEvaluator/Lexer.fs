@@ -128,7 +128,7 @@ and _fslex_tokenize  _fslex_state lexbuf =
                             let dateTime = 
                                try DateTime.Parse(lexeme lexbuf)
                                with
-                               | ex as FormatException -> raise(new InvalidDateException((lexeme lexbuf), ex))
+                               | ex as FormatException -> raise(new InvalidDateException(lexbuf, ex))
                             DATETIME(dateTime) 
 # 133 "C:\Iouri\Projects\Excemplate\LanguageEvaluator\Lexer.fs"
           )

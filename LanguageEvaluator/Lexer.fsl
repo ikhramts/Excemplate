@@ -38,7 +38,7 @@ rule tokenize = parse
 | datetime { let dateTime = 
                 try DateTime.Parse(lexeme lexbuf)
                 with
-                | ex as FormatException -> raise(new InvalidDateException((lexeme lexbuf), ex))
+                | ex as FormatException -> raise(new InvalidDateException(lexbuf, ex))
              DATETIME(dateTime) } 
 | int { INT(Int32.Parse(lexeme lexbuf)) }
 | double { DOUBLE(Double.Parse(lexeme lexbuf)) }
