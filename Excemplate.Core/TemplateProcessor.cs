@@ -140,6 +140,16 @@ namespace Excemplate.Core
             }
         }
 
+        public void ProcessFile(string templateFile, string outFile, Dictionary<string, object> bindings)
+        {
+            foreach (var binding in bindings)
+            {
+                ExpressionEvaluator.SetVariable(binding.Key, binding.Value);
+            }
+
+            ProcessFile(templateFile, outFile);
+        }
+
         //****************** Private Functions ********************//
         private void InvokeMacroIfExists(Excel.Application excel, string name)
         {

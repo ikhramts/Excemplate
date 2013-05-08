@@ -53,7 +53,7 @@ This section contains things that will be skipped for the first release, but may
 
 **Script Processor:**
 
-* Produce more descriptive errors.
+* Allow to not provide a function handler by default.
 * Add quote escaping in string literals.
 * Add ordered (i.e. not named) function arguments.
 * Maybe emit some debug info, so that some exceptions don't get swallowed completely silently?
