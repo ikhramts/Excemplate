@@ -14,6 +14,10 @@ namespace Excemplate.Core.ExcelUtils
         public Excel.Application ExcelInstance { get; private set; }
 
         //****************** Public Methods ********************//
+        /// <summary>
+        /// Get process ID of the currently running Excel instance.
+        /// </summary>
+        /// <returns></returns>
         public int GetProcessId()
         {
             if (ExcelInstance == null)
@@ -26,6 +30,10 @@ namespace Excemplate.Core.ExcelUtils
             return (int)processId;
         }
 
+        /// <summary>
+        /// Open a workbook in Excel instance and return a reference to it.
+        /// </summary>
+        /// <returns>Reference to the opened workbook</returns>
         public Excel.Workbook OpenWorkbook(string fileName)
         {
             if (ExcelInstance == null)

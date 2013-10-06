@@ -12,8 +12,6 @@ using Excemplate.Language;
 
 namespace Excemplate.Core
 {
-    public delegate object ProcessFunctionDelegate(string functionName, Dictionary<string, object> args);
-
     /// <summary>
     /// This class is responsible for executing Excemplate expressions in Excel cells.
     /// 
@@ -30,25 +28,11 @@ namespace Excemplate.Core
         public const string INITIALIZER_SHEET = "|Initialize";
 
         //****************** Public Properties ********************//
-        public ProcessFunctionDelegate FunctionHandler
-        {
-            get
-            {
-                return new ProcessFunctionDelegate(ExpressionEvaluator.EvalFunc);
-            }
-            set
-            {
-                ExpressionEvaluator.EvalFunc = new FunctionCallHandlerDelegate(value);
-            }
-        }
-
         public Evaluator ExpressionEvaluator { get; private set; }
 
         //****************** Constructor ********************//
-        public TemplateProcessor(ProcessFunctionDelegate functionHandler) {
-            var evaluatorCallback = new FunctionCallHandlerDelegate(functionHandler);
-            ExpressionEvaluator = new Evaluator(evaluatorCallback);
-            FunctionHandler = functionHandler;
+        public TemplateProcessor() {
+            ExpressionEvaluator = new Evaluator();
         }
 
         //****************** Public Methods ********************//
@@ -78,7 +62,7 @@ namespace Excemplate.Core
 
         public void Process(Excel.Worksheet sheet)
         {
-            // Apply Process() to UsedRange.  But shouldn't process UsedRange directly
+            // Apply Process() to UsedRange.  But we shouldn't work on UsedRange directly
             // because it's a funky dynamic property.
             var usedRange = sheet.UsedRange;
             var startRow = usedRange.Row;

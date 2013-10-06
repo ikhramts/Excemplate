@@ -43,6 +43,9 @@ type public FunctionEvaluatorException(funcName:string, args:Dictionary<string, 
         message.Append(")\" produced an error: ").Append(innerException.Message) |> ignore
         FunctionEvaluatorException(funcName, args, message.ToString(), innerException)
 
+    new(funcName:string, args:Dictionary<string, Object>, message:string) =
+        FunctionEvaluatorException(funcName, args, message, null)
+
     (*************** Public Properties *****************)
     member public this.FunctionName
         with get() = functionName_

@@ -34,7 +34,8 @@ namespace Excemplate.Tests.Core
         {
             ExcelManager = new ExcelManager();
             ExcelManager.OpenWorkbook(TemplatePath);
-            Processor = new TemplateProcessor(FunctionEvaluator.EvaluateFunction);
+            Processor = new TemplateProcessor();
+            Processor.ExpressionEvaluator.DefaultHandler = FunctionEvaluator.EvaluateFunction;
         }
 
         [TearDown]

@@ -20,7 +20,8 @@ namespace Excemplate.Tests.LanguageEvaluator
         [SetUp]
         public void SetUp()
         {
-            evaluator = new Evaluator(FunctionEvaluator.EvaluateFunction);
+            evaluator = new Evaluator();
+            evaluator.DefaultHandler = FunctionEvaluator.EvaluateFunction;
             evaluator.SetVariable("testString1", "testing");
             evaluator.SetVariable("testInt_1", 54);
             evaluator.SetVariable("testDouble", 554.32);
